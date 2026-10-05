@@ -84,7 +84,7 @@ const Login = () => {
                 textLable="User Name"
                 colorLable="white"
                 placeHold="inter username"
-                className="w-[350px] "
+                className="w-[350px]"
                 value={formData.username}
                 onChange={(e) =>
                   setFormData({ ...formData, username: e.target.value })

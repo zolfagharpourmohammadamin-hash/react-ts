@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import Typography from "../../../components/global/Typography";
 import Loding from "../../../components/global/Loding";
 import DsErorr from "../../../components/disignSystem/DsErorr";
+import { DUMMY_URL_FETCH } from "../../../constans/URLfetch";
 
 type Product = {
   id: number;
@@ -28,7 +29,7 @@ function ProductDetails() {
       setError("");
 
       const response = await fetch(
-        `https://dummyjson.com/products/${id}`
+        `${DUMMY_URL_FETCH}/products/${id}`
       );
 
       if (!response.ok) {
