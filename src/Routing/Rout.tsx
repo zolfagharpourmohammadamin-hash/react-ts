@@ -11,6 +11,7 @@ import PostDetails from "../pages/Posts/components/PostDetails";
 import Profile from "../pages/Profile";
 import RecoverPass from "../pages/RecoverPass";
 import Todos from "../pages/TodoList";
+import ProductDetails from "../pages/home/components/ProductDetails";
 
 const Rout = () => {
   return (
@@ -28,6 +29,7 @@ const Rout = () => {
         <Route path="profile" element={<Profile />} />
         <Route path="contact-us" element={<ContactUs />} />
         <Route path="posts/:id" element={<PostDetails />} />
+        <Route path="products/:id" element={<ProductDetails />} />
         <Route path="dropdriling" element={<DropDriling />} />
         <Route path="*" element={<NotFound />} />
       </Route>

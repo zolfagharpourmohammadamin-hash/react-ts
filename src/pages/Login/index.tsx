@@ -1,13 +1,11 @@
 import { useContext, useEffect, useState, type SubmitEvent } from "react";
+import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router";
 import DsButton from "../../components/disignSystem/DsButton";
 import DsTextBox from "../../components/disignSystem/DsTextBox";
 import Typography from "../../components/global/Typography";
 import { DUMMY_URL_FETCH } from "../../constans/URLfetch";
-import type { user } from "../../Types/user";
-import toast from "react-hot-toast";
 import { GlobalContext } from "../../context/Global-Context";
-import { LucideMoon, LucideSun } from "lucide-react";
 
 type formData = {
   username: string;
@@ -45,7 +43,7 @@ const Login = () => {
     if (res.ok) {
       return data;
     } else {
-      toast.error("Pleass Chek Your Password Or UserName");
+      return Promise.reject(data.message);
     }
   };
 
@@ -55,11 +53,16 @@ const Login = () => {
     setIsLoding(true);
     setError(false);
 
-    const data = await loginApi();
-    localStorage.setItem("token", data.accessToken);
-    toast.success("wellcome" + " " + data.firstName);
-    navigate("/app/home");
-    setIsLoding(false);
+    try {
+      const data = await loginApi();
+      localStorage.setItem("token", data.accessToken);
+      toast.success("wellcome" + " " + data.firstName);
+      navigate("/app/home");
+      setIsLoding(false);
+    } catch (err) {
+      toast.error(err as string);
+      setIsLoding(false);
+    }
   };
 
   useEffect(() => {
@@ -70,66 +73,60 @@ const Login = () => {
 
   return (
     <>
-    <main className="min-h-screen bg-white dark:bg-gray-950 text-black dark:text-white">
-      <span onClick={toggleThem} className="cursor-pointer rounded-full bg-cyan-600 flex justify-center items-center w-8 h-8">
-            {
-              them==="Light"?<LucideMoon color="black"/>:<LucideSun/>
-            }
-          </span>
+      <main className="min-h-screen bg-white dark:bg-gray-950 text-black dark:text-white">
+        <form onSubmit={(e) => handleSubmit(e)}>
+          <div className="m-auto mt-[20vh] flex gap-6 flex-col items-center justify-around rounded-2xl p-5 w-[35%] min-h-[400px] bg-cyan-950">
+            <Typography color="white" text="Login Page" className="m-0" />
 
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <div className="m-auto mt-[20vh] flex gap-6 flex-col items-center justify-around rounded-2xl p-5 w-[35%] min-h-[400px] bg-cyan-950">
-          <Typography color="white" text="Login Page" className="m-0" />
-
-          <div className="flex flex-col gap-2.5">
-            <DsTextBox
-              color="gray"
-              textLable="User Name"
-              colorLable="white"
-              placeHold="inter username"
-              className="w-[350px] "
-              value={formData.username}
-              onChange={(e) =>
-                setFormData({ ...formData, username: e.target.value })
-              }
-            />
-
-            <DsTextBox
-              color="gray"
-              textLable="Password"
-              colorLable="white"
-              placeHold="inter password"
-              className="w-[350px] "
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-              type="password"
-            />
-          </div>
-
-          <div className="flex gap-6 items-center justify-center">
-            <DsButton
-              text="Login To App"
-              color="blue"
-              size="xl"
-              radios="lg"
-              type="submit"
-              isLoading={isLoding}
-            />
-            <Link to={"/recover-pass"}>
-              <DsButton
-                text="Recover Password"
+            <div className="flex flex-col gap-2.5">
+              <DsTextBox
                 color="gray"
+                textLable="User Name"
+                colorLable="white"
+                placeHold="inter username"
+                className="w-[350px] "
+                value={formData.username}
+                onChange={(e) =>
+                  setFormData({ ...formData, username: e.target.value })
+                }
+              />
+
+              <DsTextBox
+                color="gray"
+                textLable="Password"
+                colorLable="white"
+                placeHold="inter password"
+                className="w-[350px] "
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                type="password"
+              />
+            </div>
+
+            <div className="flex gap-6 items-center justify-center">
+              <DsButton
+                text="Login To App"
+                color="blue"
                 size="xl"
                 radios="lg"
-                isDisabled={isLoding}
+                type="submit"
+                isLoading={isLoding}
               />
-            </Link>
+              <Link to={"/recover-pass"}>
+                <DsButton
+                  text="Recover Password"
+                  color="gray"
+                  size="xl"
+                  radios="lg"
+                  isDisabled={isLoding}
+                />
+              </Link>
+            </div>
           </div>
-        </div>
-      </form>
-    </main>
+        </form>
+      </main>
     </>
   );
 };
